@@ -1,0 +1,50 @@
+.body {
+  font: "NTR" "sans-serif";
+  background-color: black;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  background-color: #F5F1E3;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  color: pink;
+  text-align: center;
+  margin-top: 20%;
+}
+
+.project-list {
+  flex: 1;
+}
+
+@media only screen and (max-width: 600px) {
+  .App {
+    flex-direction: column;
+    padding: 40px 24px;
+  }
+
+  #content {
+    padding: 10px 10px;
+    width: 100%;
+  }
+
+  .section-header {
+    width: unset;
+  }
+
+  .section-header::after {
+    display: none;
+  }
+
+  .section-title {
+    font-size: 32px;
+  }
+}

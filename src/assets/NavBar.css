@@ -1,0 +1,67 @@
+@import 'typeface-poppins';
+.navbar {
+    background-color: #5DA39E !important;
+    color: #42A5F5;
+    font-family: "Poppins", sans-serif;
+    font-size: 1.2rem;
+  }
+
+  .navbar-light .navbar-brand  {
+    color: #2C3E50 !important;
+    text-decoration: none;
+    font-size: 2rem;
+  }
+
+  .navbar-light .navbar-nav .nav-link {
+    color: 2C3E50 !important;
+    text-decoration: none;
+  }
+
+  .navbar-light .navbar-nav .nav-link:hover {
+    color: var(--green-bright) !important;
+    text-decoration: none;
+
+  }
+
+  /* Navbar Button Styles */
+.navbar-custom .btn {
+  font-size: 16px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+/* Login Button */
+.navbar-custom .btn-outline-primary {
+  color: #2C3E50;
+  border-color: #2C3E50;
+}
+
+.navbar-custom .btn-outline-primary:hover {
+  background-color: #2C3E50;
+  color: #fff;
+}
+
+/* Get Started Button */
+.navbar-custom .btn-primary {
+  background-color: #5DA39E;
+  border-color: #5DA39E;
+}
+
+.navbar-custom .btn-primary:hover {
+  background-color: #46857D;
+  border-color: #46857D;
+}
+
+
+  @media only screen and (max-width: 600px) {
+    .navbar-light .navbar-brand  {
+        display: none;
+
+    }
+  
+    .navbar-light .navbar-nav.me-auto .nav-link {
+        display: none;
+
+      }
+  }
