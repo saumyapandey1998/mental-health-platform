@@ -5,10 +5,40 @@ import { Button, Form, Container } from "react-bootstrap";
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
 
-  const handleLogin = () => {
-    alert(`Logging in with Username: ${username}`);
-    // Implement actual authentication logic here
+  const handleLogin = async () => {
+    setError(null);
+    setMessage(null);
+
+    const userData = { username, password };
+
+    try {
+      const response = await fetch("http://localhost:5001/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      const data = await response.json();
+      console.log(data)
+
+      if (response.ok) {
+        // Save token to local storage (or context for global state)
+        localStorage.setItem("authToken", data.username);
+        setMessage("✅ Login successful!");
+
+        // Redirect to homepage using navigate
+        navigate("/home");
+      } else {
+        setError(data.msg || "❌ Invalid credentials. Please try again.");
+      }
+    } catch (err) {
+      setError("❌ Server error. Please try again later.");
+    }
   };
 
   return (
