@@ -7,7 +7,7 @@ import logo from './assets/mental-health.png';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Button } from 'react-bootstrap';
 
-import './assets/NavBar.css';
+import './assets/styles/NavBar.css';
 
 function NavBar() {
   return (
@@ -30,8 +30,6 @@ function NavBar() {
               <NavDropdown.Item as={Link} to="/therapy">Therapy</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/counseling">Counseling</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/self-care">Self-Care Tips</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item as={Link} to="/contact">Contact Us</NavDropdown.Item>
             </NavDropdown>
             <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
             <Nav.Link as={Link} to="/ourMission">Our Mission</Nav.Link>
