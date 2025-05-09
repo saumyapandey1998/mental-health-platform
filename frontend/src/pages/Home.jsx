@@ -34,7 +34,7 @@ const Home = () => {
         <Carousel.Item>
           <img
             className="d-block w-100"
-            src="nature"
+            src={nature}
             alt="Third slide"
           />
           <Carousel.Caption>
