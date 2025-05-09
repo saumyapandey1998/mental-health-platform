@@ -36,16 +36,27 @@ function NavBar() {
             </NavDropdown>
             <Nav.Link as={Link} to="/contact" className="text-white">Contact</Nav.Link>
             <Nav.Link as={Link} to="/ourMission" className="text-white">Our Mission</Nav.Link>
+
+            {isAuthenticated && (
+              <>
+                <Nav.Link as={Link} to="/appointments" className="text-white">Book Appointment</Nav.Link>
+                <Nav.Link as={Link} to="/feedback" className="text-white">Review</Nav.Link>
+              </>
+            )}
           </Nav>
+
           <div>
             {isAuthenticated ? (
-              <>
-                <Button variant="outline-primary" className="ms-3" as={Link} to="/appointments">Book Appointment</Button>
-                <Button variant="outline-primary" className="ms-2" onClick={() => {
+              <Button
+                variant="outline-primary"
+                className="ms-3"
+                onClick={() => {
                   localStorage.removeItem('authToken');
-                  window.location.href = '/login'; // Refresh to update state
-                }}>Logout</Button>
-              </>
+                  window.location.href = '/login';
+                }}
+              >
+                Logout
+              </Button>
             ) : (
               <>
                 <Button variant="outline-primary" className="ms-3" as={Link} to="/login">Login</Button>

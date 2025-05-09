@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Appointments from './pages/Appointments';
+import Review from './pages/Review';
 // import About from './pages/About';
 // import Contact from './pages/Contact';
 // import Services from './pages/Services';
@@ -24,6 +25,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/appointments" element={<Appointments />} />
+        <Route path="/feedback" element={<Review />} />
         {/* <Route path="/ourmission" element={<OurMission />} /> */}
       </Routes>
     </div>

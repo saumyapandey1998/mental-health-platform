@@ -2,12 +2,10 @@ import User from '../models/User.js';
 import Appointment from '../models/Appointment.js';
 import mongoose from 'mongoose';
 
-
-// Schema for Disabled Slots
 const DisabledSlotSchema = new mongoose.Schema({
   therapist: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  date: { type: String, required: true }, // Format: MM/DD/YYYY
-  time: { type: String, required: true }, // Format: HH:mm
+  date: { type: String, required: true },
+  time: { type: String, required: true },
 });
 
 const DisabledSlot = mongoose.model('DisabledSlot', DisabledSlotSchema);
@@ -53,14 +51,16 @@ export const getBookedSlots = async (req, res) => {
     if (!therapistId || !date) {
       return res.status(400).json({ message: 'Therapist ID and date required' });
     }
+
     const start = parseDate(date);
     if (!start || isNaN(start.getTime())) {
       return res.status(400).json({ message: 'Invalid date format, use MM/DD/YYYY' });
     }
+
     const end = new Date(start);
     end.setDate(start.getDate() + 1);
 
-    // Fetch booked appointments
+    // Fetch appointments
     const appointments = await Appointment.find({
       therapist: therapistId,
       date: { $gte: start, $lt: end },
@@ -71,7 +71,7 @@ export const getBookedSlots = async (req, res) => {
       new Date(appt.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
     );
 
-    // Fetch disabled slots for the therapist on this date
+    // Fetch disabled slots
     const disabledSlots = await DisabledSlot.find({
       therapist: therapistId,
       date: date,
@@ -79,8 +79,32 @@ export const getBookedSlots = async (req, res) => {
 
     const disabledTimes = disabledSlots.map((slot) => slot.time);
 
-    // Combine booked and disabled slots
-    const unavailableTimes = [...new Set([...bookedTimes, ...disabledTimes])];
+    // Define all possible slot times
+    const SLOT_TIMES = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
+
+    // Determine unavailable times, including past slots
+    const now = new Date();
+    const currentDateStr = `${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getDate().toString().padStart(2, '0')}/${now.getFullYear()}`;
+    let unavailableTimes = [...new Set([...bookedTimes, ...disabledTimes])];
+
+    // If the requested date is today, filter out past time slots
+    if (date === currentDateStr) {
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+      const currentTime = currentHour * 60 + currentMinute;
+
+      unavailableTimes = [
+        ...unavailableTimes,
+        ...SLOT_TIMES.filter((slot) => {
+          const [hour, minute] = slot.split(':').map(Number);
+          const slotTime = hour * 60 + minute;
+          return slotTime <= currentTime;
+        }),
+      ];
+    }
+
+    // Ensure only unique times and sort them
+    unavailableTimes = [...new Set(unavailableTimes)];
 
     res.json(unavailableTimes);
   } catch (error) {
@@ -96,12 +120,10 @@ export const disableSlot = async (req, res) => {
       return res.status(400).json({ message: 'Therapist ID, date, and time required' });
     }
 
-    // Verify the user is the therapist
     if (req.user.id !== therapistId) {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 
-    // Check if the slot is already disabled
     const existingDisabledSlot = await DisabledSlot.findOne({
       therapist: therapistId,
       date: date,
@@ -136,7 +158,6 @@ export const bookAppointment = async (req, res) => {
     const [month, day, year] = date.split('/');
     const fullDate = new Date(`${year}-${month}-${day} ${time}:00`).toISOString();
 
-    // Check for existing appointment
     const conflict = await Appointment.findOne({
       therapist: therapistId,
       date: fullDate,
@@ -146,7 +167,6 @@ export const bookAppointment = async (req, res) => {
       return res.status(400).json({ message: 'Slot already booked' });
     }
 
-    // Check if the slot is disabled
     const disabledSlot = await DisabledSlot.findOne({
       therapist: therapistId,
       date: date,
@@ -208,6 +228,47 @@ export const updateAppointmentStatus = async (req, res) => {
   }
 };
 
+export const completeAppointment = async (req, res) => {
+  try {
+    const { appointmentId } = req.body;
+
+    if (!appointmentId) {
+      return res.status(400).json({ message: 'Appointment ID is required' });
+    }
+
+    const appointment = await Appointment.findById(appointmentId).populate('therapist');
+    
+    if (!appointment) {
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+
+    if (appointment.therapist._id.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Unauthorized to complete this appointment' });
+    }
+
+    if (appointment.status === 'cancelled' || appointment.status === 'completed') {
+      return res.status(400).json({ message: 'Appointment cannot be completed' });
+    }
+
+    appointment.status = 'completed';
+    appointment.updatedAt = Date.now();
+    await appointment.save();
+
+    res.json({ 
+      success: true,
+      message: 'Appointment marked as completed',
+      appointment 
+    });
+  } catch (error) {
+    console.error('Error completing appointment:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Failed to complete appointment',
+      error: error.message 
+    });
+  }
+};
+
 export const modifyAppointment = async (req, res) => {
   try {
     const { appointmentId, action, newDate, newTime } = req.body;
@@ -230,7 +291,6 @@ export const modifyAppointment = async (req, res) => {
         return res.status(400).json({ message: 'Invalid new date or time format' });
       }
 
-      // Check for existing appointment
       const conflict = await Appointment.findOne({
         therapist: appointment.therapist,
         date: isoDate,
@@ -241,7 +301,6 @@ export const modifyAppointment = async (req, res) => {
         return res.status(400).json({ message: 'Slot already booked' });
       }
 
-      // Check if the new slot is disabled
       const disabledSlot = await DisabledSlot.findOne({
         therapist: appointment.therapist,
         date: newDate,
@@ -279,6 +338,22 @@ export const getAppointments = async (req, res) => {
     }).populate('patient therapist');
     res.json(appointments);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error in getAppointments:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export const getCompletedAppointments = async (req, res) => {
+  try {
+    console.log('getCompletedAppointments - req.user:', req.user);
+    const appointments = await Appointment.find({
+      status: 'completed',
+      $or: [{ patient: req.user.id }, { therapist: req.user.id }],
+    }).populate('patient therapist');
+    console.log('Fetched completed appointments:', appointments);
+    res.json(appointments);
+  } catch (error) {
+    console.error('Error in getCompletedAppointments:', error);
+    res.status(500).json({ message: 'Error fetching completed appointments', error: error.message });
   }
 };

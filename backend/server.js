@@ -4,6 +4,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import authRoutes from './routes/authRoutes.js';
 import appointmentRoutes from './routes/appointmentRoutes.js';
+import feedbackRoutes from './routes/feedbackRoutes.js'
 
 // Load environment variables
 dotenv.config();
@@ -30,6 +31,7 @@ connectDB();
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/appointments', appointmentRoutes);
+app.use('/api/feedback', feedbackRoutes); 
 
 // Start Server
 const PORT = process.env.PORT || 5001;
