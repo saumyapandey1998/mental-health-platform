@@ -33,8 +33,6 @@ function NavBar() {
               <NavDropdown.Item as={Link} to="/therapy">Therapy</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/counseling">Counseling</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/self-care">Self-Care Tips</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item as={Link} to="/contact">Contact Us</NavDropdown.Item>
             </NavDropdown>
             <Nav.Link as={Link} to="/contact" className="text-white">Contact</Nav.Link>
             <Nav.Link as={Link} to="/ourMission" className="text-white">Our Mission</Nav.Link>

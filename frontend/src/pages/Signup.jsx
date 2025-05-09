@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Add useNavigate
 import { Button, Form, Container, Alert } from "react-bootstrap";
+import '../assets/styles/signup.css'
 
 function Signup() {
   const [username, setUsername] = useState("");
