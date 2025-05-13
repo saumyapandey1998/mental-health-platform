@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table, Button, Modal, Typography, Select, DatePicker, Space, Alert } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
+import { useNavigate } from 'react-router-dom';
 
 const { Title } = Typography;
 
@@ -34,7 +35,8 @@ const Appointments = () => {
   const role = localStorage.getItem('role');
   const username = localStorage.getItem('username');
   const userId = localStorage.getItem('userId');
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
     if (!token) {
       window.location.href = '/login';
@@ -379,6 +381,15 @@ const Appointments = () => {
             Cancel
           </Button>
           <Button disabled>Reschedule</Button>
+          <Button disabled>Video Call</Button>
+          <Button
+            type="primary"
+            onClick={() => {
+              navigate(`/appointments/video-call?appointmentId=${record._id}`);
+            }}
+          >
+            Video Call
+          </Button>
         </Space>
       );
     }
@@ -407,6 +418,14 @@ const Appointments = () => {
           }}
         >
           Reschedule
+        </Button>
+        <Button
+          type="primary"
+          onClick={() => {
+            navigate(`/appointments/video-call?appointmentId=${record._id}`);
+          }}
+        >
+          Video Call
         </Button>
       </Space>
     );
