@@ -7,10 +7,10 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Appointments from './pages/Appointments';
 import Review from './pages/Review';
-// import About from './pages/About';
-// import Contact from './pages/Contact';
-// import Services from './pages/Services';
-// import OurMission from './pages/OurMission';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import Services from './pages/Services';
+import OurMission from './pages/OurMission';
 
 function App() {
   return (
@@ -19,14 +19,14 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} /> {}
         <Route path="/home" element={<Home />} />
-        {/* <Route path="/about" element={<About />} /> */}
+        {<Route path="/about" element={<About />} /> }
         {/* <Route path="/contact" element={<Contact />} /> */}
         {/* <Route path="/services" element={<Services />} /> */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/appointments" element={<Appointments />} />
         <Route path="/feedback" element={<Review />} />
-        {/* <Route path="/ourmission" element={<OurMission />} /> */}
+        {<Route path="/ourmission" element={<OurMission />} />}
       </Routes>
     </div>
   );

@@ -12,7 +12,7 @@ function NavBar() {
   const isAuthenticated = localStorage.getItem('authToken');
 
   return (
-    <Navbar className="navBar" fixed="top" expand="lg" style={{ backgroundColor: '#6B7280', color: 'white' }}>
+    <Navbar className="navBar" expand="lg" style={{ backgroundColor: '#6B7280', color: 'white' }}>
       <Container>
         <Navbar.Brand as={Link} to="/" className="d-flex align-items-center text-white">
           <img
@@ -28,14 +28,12 @@ function NavBar() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
             <Nav.Link as={Link} to="/" className="text-white">Home</Nav.Link>
-            <Nav.Link as={Link} to="/about" className="text-white">About</Nav.Link>
             <NavDropdown title="Services" id="services-dropdown" className="text-white">
               <NavDropdown.Item as={Link} to="/therapy">Therapy</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/counseling">Counseling</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/self-care">Self-Care Tips</NavDropdown.Item>
             </NavDropdown>
-            <Nav.Link as={Link} to="/contact" className="text-white">Contact</Nav.Link>
-            <Nav.Link as={Link} to="/ourMission" className="text-white">Our Mission</Nav.Link>
+            <Nav.Link as={Link} to="/OurMission" className="text-white">Our Mission</Nav.Link>
 
             {isAuthenticated && (
               <>

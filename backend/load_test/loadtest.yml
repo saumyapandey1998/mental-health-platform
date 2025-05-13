@@ -1,0 +1,13 @@
+config:
+  target: "http://localhost:5001"
+  phases:
+    - duration: 60
+      arrivalRate: 10   # Users per second
+scenarios:
+  - flow:
+    - post:
+        url: "/login"
+        json:
+          username: "testuser"
+          password: "password123"
+
