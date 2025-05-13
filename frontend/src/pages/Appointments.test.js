@@ -15,8 +15,8 @@ describe('Appointments Component', () => {
     localStorage.setItem('role', 'therapist');
     localStorage.setItem('userId', '123');
     localStorage.setItem('username', 'testUser');
-  });
-
+  });  
+     
   afterEach(() => {
     mockAxios.reset();
     localStorage.clear();
